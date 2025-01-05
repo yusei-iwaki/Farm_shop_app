@@ -21,8 +21,14 @@ app.use(methodOverride('_method'));
 
 const categories = ['果物', '野菜', '乳製品', 'パン類', 'その他'];
 app.get('/products', async (req, res) => {
-    const products = await Product.find({});
-    res.render('products/index', { products });
+    const { category } = req.query;
+    if (category) {
+        const products = await Product.find({ category });
+        res.render('products/index', { products, category });
+    } else {
+        const products = await Product.find({});
+        res.render('products/index', { products, category: '全' });
+    }
 });
 
 app.get('/products/new', (req, res) => {
